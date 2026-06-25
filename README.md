@@ -51,6 +51,6 @@ MSRA 是 `B-LOC`，Weibo 是 `B-LOC.NAM`，所以分别建 label2id。
 ![Weibo标签分布](https://github.com/user-attachments/assets/8189df4a-7717-42f2-bc44-998c42e4379d)
 
 ### 3. 子词对齐
-BERT 会把词切碎，只保留第一个子词的标签，其余标 O 忽略。
+BERT 会把词分的很细，因此只保留第一个子词的标签，其余标 O 忽略。
 
 
