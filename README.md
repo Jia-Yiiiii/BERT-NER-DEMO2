@@ -6,8 +6,15 @@
 ## 数据分析
 
 ### MSRA 样本（新闻）
-
-![MSRA数据样本](https://github.com/user-attachments/assets/54886593-1432-4c90-8653-c545491e2a62)
+| 标签 | 数量 |
+|------|------|
+| O | 206412 |
+| I-ORG | 9141 |
+| I-LOC | 5313 |
+| B-LOC | 3952 |
+| I-PER | 3612 |
+| B-ORG | 2158 |
+| B-PER | 1850 |
 
 ### Weibo 样本（微博）
 
