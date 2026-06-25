@@ -1,1 +1,88 @@
+import torch
+from torch.utils.data import Dataset, DataLoader
 
+
+class NERDataset(Dataset):
+    def __init__(self, data_path, tokenizer, max_len):
+        self.tokenizer = tokenizer
+        self.max_len = max_len
+        self.data = self.read_data(data_path)
+        labels = set(['O'])
+        for tokens, label_list in self.data:
+            for label in label_list:
+                labels.add(label)
+
+        label_list = sorted(labels)
+        self.label2id = {}
+        self.id2label = {}
+        for i in range(len(label_list)):
+            self.label2id[label_list[i]] = i
+            self.id2label[i] = label_list[i]
+
+    def read_data(self, file_path):
+        data = []
+        tokens = []
+        labels = []
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line == '' or line == '0':
+                    if tokens:
+                        data.append((tokens, labels))
+                        tokens = []
+                        labels = []
+                    continue
+                parts = line.split()
+                if len(parts) >= 2:
+                    tokens.append(parts[0])
+                    labels.append(parts[1] if parts[1] != '0' else 'O')
+        if tokens:
+            data.append((tokens, labels))
+        return data
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        tokens, labels = self.data[idx]
+        encoding = self.tokenizer(
+            tokens,
+            is_split_into_words=True,
+            max_length=self.max_len,
+            padding='max_length',
+            truncation=True,
+            return_tensors=None
+        )
+        word_ids = encoding.word_ids()
+        align = []
+        last = None
+        for id in word_ids:
+            if id is None:
+                align.append(self.label2id['O'])
+                continue
+            if id != last:
+                if id < len(labels):
+                    align.append(self.label2id[labels[id]])
+                else:
+                    align.append(self.label2id['O'])
+                last = id
+            else:
+                align.append(self.label2id['O'])
+        return (
+            torch.tensor(encoding['input_ids'], dtype=torch.long),
+            torch.tensor(encoding['attention_mask'], dtype=torch.long),
+            torch.tensor(align, dtype=torch.long)
+        )
+
+    def collate_fn(self, batch):
+        all_input_ids = []
+        all_attention_masks = []
+        all_labels = []
+        for item in batch:
+            all_input_ids.append(item[0])
+            all_attention_masks.append(item[1])
+            all_labels.append(item[2])
+        return torch.stack(all_input_ids), torch.stack(all_attention_masks), torch.stack(all_labels)
+
+    def get_loader(self, batch_size, shuffle=True):
+        return DataLoader(self, batch_size=batch_size, shuffle=shuffle, collate_fn=self.collate_fn)
