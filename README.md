@@ -1,11 +1,21 @@
-# BERT-NER-DEMO2
-基于BERT的中文命名实体识别
+# 基于 BERT 的中文命名实体识别
 
----
+本项目使用 BERT 模型在 **MSRA** 和 **Weibo** 两个中文数据集上进行命名实体识别（NER）实验，并对比了不同模型和标签对齐策略的效果。
 
 ## 数据分析
 
-### MSRA 样本（新闻）
+### 数据格式
+MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' or line == '0'` 同时兼容两种格式。
+
+两个数据集的标签体系不同：
+*   **MSRA**：标签为 `B-LOC` 形式，共 7 种。
+*   **Weibo**：标签为 `B-LOC.NAM` 形式，增加了 `.NAM`（具体名称）和 `.NOM`（指代）的区分，共 17 种。
+
+因此，在代码中为两个数据集**分别建立了独立的 `label2id` 映射**，不共用标签体系。
+
+### 标签分布
+
+**MSRA 训练集标签分布**
 | 标签 | 数量 |
 |------|------|
 | O | 206412 |
@@ -16,7 +26,7 @@
 | B-ORG | 2158 |
 | B-PER | 1850 |
 
-### Weibo 样本（微博）
+**Weibo 训练集标签分布**
 | 标签 | 数量 |
 |------|------|
 | O | 68777 |
@@ -37,21 +47,11 @@
 | B-GPE.NOM | 8 |
 | I-GPE.NOM | 8 |
 
-### 两个数据集的区别
-MSRA 只分 3 种实体（人名、地名、组织名），标签 7 种。
-Weibo 分得更细，多出了 `.NAM`（具体名称）和 `.NOM`（指代）的区别，标签 17 种。
+## 数据处理特点
 
-
-## 数据处理
-### 1. 两个数据集格式不一样
-MSRA 用 `0` 分隔句子，Weibo 用空行。代码里同时判断 `line == '' or line == '0'`。
-### 2. 标签不一样
-MSRA 是 `B-LOC`，Weibo 是 `B-LOC.NAM`，所以分别建 label2id。
-![MSRA标签分布](https://github.com/user-attachments/assets/d9f893de-1136-4056-b433-4b5b35d4366b)
-![Weibo标签分布](https://github.com/user-attachments/assets/8189df4a-7717-42f2-bc44-998c42e4379d)
-
-### 3. 子词对齐
-BERT 会把词分的很细，因此只保留第一个子词的标签，其余标 O 忽略。
+1.  **兼容不同数据格式**：统一的数据读取函数同时处理 MSRA（`0` 分隔）和 Weibo（空行分隔）的数据格式。
+2.  **独立标签映射**：由于标签体系不同，MSRA 和 Weibo 分别构建自己的 `label2id` 映射表。
+3.  **子词对齐策略**：针对 BERT 分词器将词切分为子词（subtoken）的问题，采用 **“忽略策略”**。即仅保留每个词第一个子词的原始标签，其余子词标注为 `O`（在损失计算中被忽略），避免标签冲突。
 
 ## 实验结果
 
@@ -71,17 +71,21 @@ BERT 会把词分的很细，因此只保留第一个子词的标签，其余标
 | I-PER | 0.99 | 0.99 | 0.99 | 558 |
 | **Micro Avg** | **0.98** | **0.96** | **0.97** | **4141** |
 
-训练曲线：
-<img width="602" height="338" alt="16e51ab98de36d90c1c3829a86061ce4" src="https://github.com/user-attachments/assets/48264565-e751-4dc6-b828-4bc6bc018b42" />
-<img width="1112" height="383" alt="78dc19eaa75e60db649ea489df90982d" src="https://github.com/user-attachments/assets/8f397dbc-42ae-4e62-bfa1-b3e62e3fb786" />
-<img width="686" height="416" alt="93be1c039abd130067117a65abd1afc6" src="https://github.com/user-attachments/assets/093db2e4-c7df-4592-b69b-95fed66a07a7" />
+### 结果分析
+*   **人名（PER）识别效果最好**，F1 达到 0.99，说明模型对名称类实体学习充分。
+*   **验证集 F1 稳定在 0.93 以上**，训练过程中没有明显的过拟合现象。
+*   **组织名（ORG）召回率相对较低**（0.91），部分组织名称可能被漏标，这是后续可以优化的方向。
 
-**分析：**
-- 人名（PER）识别效果最好，F1 达到 0.99
-- 验证集 F1 稳定在 0.93 以上，没有明显过拟合
+### 实验配置
+*   **学习率**：2e-5
+*   **Dropout**：0.2
+*   **训练轮数**：30
+*   **对齐策略**：ignore（忽略子词标签）
+*   **模型**：bert-base-chinese
+*   **数据集**：MSRA
 
-**配置：**
-- 学习率：2e-5
-- Dropout：0.2
-- 训练轮数：30
-- 对齐策略：ignore
+## 待完成实验
+- [ ] MSRA + chinese-bert-wwm
+- [ ] Weibo + bert-base-chinese
+- [ ] Weibo + chinese-bert-wwm
+- [ ] 尝试标签传播策略（`align_type='other'`）对比效果
