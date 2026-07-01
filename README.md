@@ -72,14 +72,12 @@ BERT 会把词分的很细，因此只保留第一个子词的标签，其余标
 | **Micro Avg** | **0.98** | **0.96** | **0.97** | **4141** |
 
 训练曲线：
-
-![训练loss](./images/train_loss.png)
-![验证loss](./images/eval_loss.png)
-![验证F1](./images/eval_f1.png)
+<img width="602" height="338" alt="16e51ab98de36d90c1c3829a86061ce4" src="https://github.com/user-attachments/assets/48264565-e751-4dc6-b828-4bc6bc018b42" />
+<img width="1112" height="383" alt="78dc19eaa75e60db649ea489df90982d" src="https://github.com/user-attachments/assets/8f397dbc-42ae-4e62-bfa1-b3e62e3fb786" />
+<img width="686" height="416" alt="93be1c039abd130067117a65abd1afc6" src="https://github.com/user-attachments/assets/093db2e4-c7df-4592-b69b-95fed66a07a7" />
 
 **分析：**
 - 人名（PER）识别效果最好，F1 达到 0.99
-- 组织名（ORG）召回稍低（0.91），部分组织名被漏标
 - 验证集 F1 稳定在 0.93 以上，没有明显过拟合
 
 **配置：**
