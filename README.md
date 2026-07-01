@@ -70,6 +70,10 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | I-ORG | 0.97 | 0.95 | 0.96 | - |
 | I-PER | 0.99 | 0.99 | 0.99 | 558 |
 | **Micro Avg** | **0.98** | **0.96** | **0.97** | **4141** |
+### 训练曲线
+<img width="602" height="338" alt="16e51ab98de36d90c1c3829a86061ce4" src="https://github.com/user-attachments/assets/f2e5dac1-a160-48ca-b562-7a064ea601b6" />
+<img width="1112" height="383" alt="78dc19eaa75e60db649ea489df90982d" src="https://github.com/user-attachments/assets/d161ba4b-4d08-45b3-9092-a1c0262afc42" />
+<img width="686" height="416" alt="93be1c039abd130067117a65abd1afc6" src="https://github.com/user-attachments/assets/8529cbc0-c9e0-44cb-af13-ae77ebe75dc9" />
 
 ### 结果分析
 *   **人名（PER）识别效果最好**，F1 达到 0.99，说明模型对名称类实体学习充分。
