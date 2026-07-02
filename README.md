@@ -105,8 +105,75 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 - 与 bert-base-chinese（0.9123）相比，chinese-bert-wwm 在 MSRA 上略高 0.0011
 - 全词掩码在规范的新闻文本上优势不明显
 - B-ORG 的召回稍有下降，但整体保持稳定
-## 待完成实验
-- [ ] MSRA + chinese-bert-wwm
-- [ ] Weibo + bert-base-chinese
-- [ ] Weibo + chinese-bert-wwm
-- [ ] 尝试标签传播策略（`align_type='other'`）对比效果
+### Weibo + chinese-bert-wwm
+
+**最佳验证集 F1：0.7282**
+
+测试集详细结果：
+
+| 类别 | Precision | Recall | F1 | Support |
+|------|-----------|--------|-----|---------|
+| B-GPE.NAM | 0.84 | 0.89 | 0.86 | 46 |
+| B-GPE.NOM | 0.00 | 0.00 | 0.00 | 2 |
+| B-LOC.NAM | 0.58 | 0.37 | 0.45 | 19 |
+| B-LOC.NOM | 1.00 | 0.44 | 0.62 | 9 |
+| B-ORG.NAM | 0.58 | 0.54 | 0.56 | 39 |
+| B-ORG.NOM | 0.85 | 0.69 | 0.76 | 16 |
+| B-PER.NAM | 0.85 | 0.80 | 0.83 | 110 |
+| B-PER.NOM | 0.93 | 0.77 | 0.85 | 167 |
+| I-GPE.NAM | 0.87 | 0.87 | 0.87 | 60 |
+| I-GPE.NOM | 0.00 | 0.00 | 0.00 | 2 |
+| I-LOC.NAM | 0.76 | 0.36 | 0.48 | 45 |
+| I-LOC.NOM | 0.75 | 0.40 | 0.52 | 15 |
+| I-ORG.NAM | 0.69 | 0.61 | 0.65 | 100 |
+| I-ORG.NOM | 0.67 | 0.67 | 0.67 | 21 |
+| I-PER.NAM | 0.89 | 0.74 | 0.81 | 200 |
+| I-PER.NOM | 0.89 | 0.83 | 0.86 | 213 |
+| **Micro Avg** | **0.68** | **0.70** | **0.69** | **1072** |
+
+**训练曲线：**
+<img width="497" height="317" alt="image" src="https://github.com/user-attachments/assets/6a51f42b-171d-48e9-b50b-7eb07ddbd97b" />
+<img width="1017" height="321" alt="image" src="https://github.com/user-attachments/assets/ab949485-427e-42e6-a7e4-00455e4c0e1b" />
+<img width="498" height="318" alt="image" src="https://github.com/user-attachments/assets/f1eff8c2-cb24-4055-9b93-29a3a1779523" />
+
+**分析：**
+- GPE.NAM 识别最好（F1 0.86-0.87），地名和组织名（LOC.NAM、ORG.NAM）效果较差
+- GPE.NOM 和 I-GPE.NOM 为 0，因为测试集分别只有 2 个样本，模型学不到
+- 整体 F1 比 MSRA 低约 23 个点，说明 Weibo 口语化、标签细、数据少，难度大
+### Weibo + bert-base-chinese
+
+**最佳验证集 F1：0.7259**
+
+测试集详细结果：
+
+| 类别 | Precision | Recall | F1 | Support |
+|------|-----------|--------|-----|---------|
+| B-GPE.NAM | 0.85 | 0.89 | 0.87 | 46 |
+| B-GPE.NOM | 0.00 | 0.00 | 0.00 | 2 |
+| B-LOC.NAM | 0.42 | 0.42 | 0.42 | 19 |
+| B-LOC.NOM | 0.80 | 0.44 | 0.57 | 9 |
+| B-ORG.NAM | 0.67 | 0.46 | 0.55 | 39 |
+| B-ORG.NOM | 0.86 | 0.38 | 0.52 | 16 |
+| B-PER.NAM | 0.84 | 0.77 | 0.81 | 110 |
+| B-PER.NOM | 0.93 | 0.73 | 0.82 | 167 |
+| I-GPE.NAM | 0.89 | 0.92 | 0.90 | 60 |
+| I-GPE.NOM | 0.00 | 0.00 | 0.00 | 2 |
+| I-LOC.NAM | 0.59 | 0.38 | 0.46 | 45 |
+| I-LOC.NOM | 0.57 | 0.27 | 0.36 | 15 |
+| I-ORG.NAM | 0.75 | 0.58 | 0.66 | 100 |
+| I-ORG.NOM | 0.64 | 0.33 | 0.44 | 21 |
+| I-PER.NAM | 0.87 | 0.71 | 0.78 | 200 |
+| I-PER.NOM | 0.90 | 0.83 | 0.86 | 213 |
+| **Micro Avg** | **0.67** | **0.66** | **0.66** | **1064** |
+
+**训练曲线：**
+<img width="500" height="321" alt="image" src="https://github.com/user-attachments/assets/6b1dbca4-7454-45b6-9801-b4f78df4eea0" />
+<img width="1003" height="315" alt="image" src="https://github.com/user-attachments/assets/415cab02-1325-449e-8d41-5a2d03b84540" />
+<img width="500" height="325" alt="image" src="https://github.com/user-attachments/assets/6e5c8702-3f0a-47f1-aa89-96d8d3f0c920" />
+
+**分析：**
+- GPE.NAM 识别最好（F1 0.87-0.90），地理实体相对规范
+- GPE.NOM 为 0，测试集仅 2 个样本，无法学习
+- 整体 F1 0.66，与 chinese-bert-wwm（0.69）接近，两个模型在 Weibo 上差距不大
+- 相比 MSRA（0.91），下降约 25 个点，Weibo 口语化、标签细、数据少
+
