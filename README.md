@@ -198,8 +198,36 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 * GPE.NAM 识别最好（F1 0.87-0.90），地理实体相对规范。
 * GPE.NOM 为 0，测试集仅 2 个样本，无法学习。
 * 整体 F1 0.66，与 chinese-bert-wwm（0.69）接近，两个模型在 Weibo 上差距不大。
-* 相比 MSRA（0.91），下降约 25 个点，Weibo 口语化、标签细、数据少。
 
-## 三、总结
+### Weibo + chinese-bert-wwm (align_type='other')
 
-实验表明，在规范新闻语料（MSRA）上，BERT 系列模型能达到很高的 F1（约 0.91-0.93），且不同模型间差距很小。在口语化的社交媒体文本（Weibo）上，性能显著下降至 0.66-0.69，说明当前模型对非规范文本的实体识别仍有较大挑战。此外，对比 `ignore` 和 `other` 两种子词对齐策略，后者在 Weibo 上有微弱提升，但整体影响有限。
+**最佳验证集 F1：0.7259**
+
+测试集详细结果：
+
+| 类别 | Precision | Recall | F1 | Support |
+|------|-----------|--------|-----|---------|
+| B-GPE.NAM | 0.85 | 0.89 | 0.87 | 46 |
+| B-GPE.NOM | 0.00 | 0.00 | 0.00 | 2 |
+| B-LOC.NAM | 0.42 | 0.42 | 0.42 | 19 |
+| B-LOC.NOM | 0.80 | 0.44 | 0.57 | 9 |
+| B-ORG.NAM | 0.67 | 0.46 | 0.55 | 39 |
+| B-ORG.NOM | 0.86 | 0.38 | 0.52 | 16 |
+| B-PER.NAM | 0.84 | 0.77 | 0.81 | 110 |
+| B-PER.NOM | 0.93 | 0.73 | 0.82 | 167 |
+| I-GPE.NAM | 0.89 | 0.92 | 0.90 | 60 |
+| I-GPE.NOM | 0.00 | 0.00 | 0.00 | 2 |
+| I-LOC.NAM | 0.59 | 0.38 | 0.46 | 45 |
+| I-LOC.NOM | 0.57 | 0.27 | 0.36 | 15 |
+| I-ORG.NAM | 0.75 | 0.58 | 0.66 | 100 |
+| I-ORG.NOM | 0.64 | 0.33 | 0.44 | 21 |
+| I-PER.NAM | 0.87 | 0.71 | 0.78 | 200 |
+| I-PER.NOM | 0.90 | 0.83 | 0.86 | 213 |
+| **Micro Avg** | **0.67** | **0.66** | **0.66** | **1064** |
+
+**训练曲线：**
+<img width="495" height="317" alt="image" src="https://github.com/user-attachments/assets/93f392fb-2ca9-47d0-b319-ed4317dacd66" />
+<img width="1007" height="317" alt="image" src="https://github.com/user-attachments/assets/85779d5d-9b18-4113-a5ad-339fca163cbf" />
+<img width="497" height="317" alt="image" src="https://github.com/user-attachments/assets/3e09bb9b-b28b-488c-85f9-d10c03ec3cee" />
+**分析：**
+- 与 align_type='ignore'（0.69）相比，other 策略（0.66）略低，说明在数据量小的情况下，保守的 ignore 策略更可靠
