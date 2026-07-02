@@ -31,9 +31,11 @@ class Trainer:
         dev_path = os.path.join(self.config["data_dir"], self.config["dev_file"])
         test_path = os.path.join(self.config["data_dir"], self.config["test_file"])
 
-        train_set = NERDataset(train_path, tokenizer, self.config["max_len"])
-        dev_set = NERDataset(dev_path, tokenizer, self.config["max_len"])
-        test_set = NERDataset(test_path, tokenizer, self.config["max_len"])
+        at = self.config.get("align_type", "ignore")
+
+        train_set = NERDataset(train_path, tokenizer, self.config["max_len"], at)
+        dev_set = NERDataset(dev_path, tokenizer, self.config["max_len"], at)
+        test_set = NERDataset(test_path, tokenizer, self.config["max_len"], at)
 
         self.train_loader = train_set.get_loader(self.config["batch_size"], True)
         self.dev_loader = dev_set.get_loader(self.config["batch_size"], False)
