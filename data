@@ -3,9 +3,10 @@ from torch.utils.data import Dataset, DataLoader
 
 
 class NERDataset(Dataset):
-    def __init__(self, data_path, tokenizer, max_len):
+    def __init__(self, data_path, tokenizer, max_len, align_type='ignore'):
         self.tokenizer = tokenizer
         self.max_len = max_len
+        self.at = align_type
         self.data = self.read_data(data_path)
         labels = set(['O'])
         for tokens, label_list in self.data:
@@ -56,18 +57,30 @@ class NERDataset(Dataset):
         word_ids = encoding.word_ids()
         align = []
         last = None
-        for id in word_ids:
-            if id is None:
+
+        for wid in word_ids:
+            if wid is None:
                 align.append(self.label2id['O'])
                 continue
-            if id != last:
-                if id < len(labels):
-                    align.append(self.label2id[labels[id]])
+
+            if wid != last:
+                if wid < len(labels):
+                    align.append(self.label2id[labels[wid]])
                 else:
                     align.append(self.label2id['O'])
-                last = id
+                last = wid
             else:
-                align.append(self.label2id['O'])
+                if self.at == 'ignore':
+                    align.append(self.label2id['O'])
+                else:
+                    if wid < len(labels):
+                        tag = labels[wid]
+                        if tag.startswith('B-'):
+                            tag = 'I-' + tag[2:]
+                        align.append(self.label2id.get(tag, self.label2id['O']))
+                    else:
+                        align.append(self.label2id['O'])
+
         return (
             torch.tensor(encoding['input_ids'], dtype=torch.long),
             torch.tensor(encoding['attention_mask'], dtype=torch.long),
