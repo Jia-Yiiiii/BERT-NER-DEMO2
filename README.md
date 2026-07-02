@@ -2,20 +2,22 @@
 
 本项目使用 BERT 模型在 **MSRA** 和 **Weibo** 两个中文数据集上进行命名实体识别（NER）实验，并对比了不同模型和标签对齐策略的效果。
 
-## 数据分析
+## 一、数据分析
 
-### 数据格式
+### 1.1 数据格式
+
 MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' or line == '0'` 同时兼容两种格式。
 
 两个数据集的标签体系不同：
-*   **MSRA**：标签为 `B-LOC` 形式，共 7 种。
-*   **Weibo**：标签为 `B-LOC.NAM` 形式，增加了 `.NAM`（具体名称）和 `.NOM`（指代）的区分，共 17 种。
+* **MSRA**：标签为 `B-LOC` 形式，共 7 种。
+* **Weibo**：标签为 `B-LOC.NAM` 形式，增加了 `.NAM`（具体名称）和 `.NOM`（指代）的区分，共 17 种。
 
 因此，在代码中为两个数据集**分别建立了独立的 `label2id` 映射**，不共用标签体系。
 
-### 标签分布
+### 1.2 标签分布
 
 **MSRA 训练集标签分布**
+
 | 标签 | 数量 |
 |------|------|
 | O | 206412 |
@@ -27,6 +29,7 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | B-PER | 1850 |
 
 **Weibo 训练集标签分布**
+
 | 标签 | 数量 |
 |------|------|
 | O | 68777 |
@@ -47,16 +50,18 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | B-GPE.NOM | 8 |
 | I-GPE.NOM | 8 |
 
-### 数据处理
+### 1.3 数据处理
+
 <img width="832" height="327" alt="image" src="https://github.com/user-attachments/assets/8facc656-a167-4d23-aa6a-984fbd225345" />
 <img width="617" height="330" alt="image" src="https://github.com/user-attachments/assets/c9db921c-50a5-4b22-b3d2-8df0a501a530" />
+
 1. 读取时兼容 MSRA（`0` 分隔）和 Weibo（空行分隔）两种格式。
 2. 自动从数据中构建标签映射。MSRA 和 Weibo 标签体系不同，代码分别生成各自的 label2id，不共用。
 3. BERT 分词会产生子词，导致标签数量对不上。使用 `word_ids` 对齐，只保留每个词首个子词的原始标签，后续子词标 `O` 忽略。同时也支持标签传播策略（`other`），用于对比实验。
 
-## 实验结果
+## 二、实验结果
 
-### MSRA + bert-base-chinese
+### 2.1 MSRA + bert-base-chinese
 
 **最佳验证集 F1：0.9353**
 
@@ -71,17 +76,22 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | I-ORG | 0.97 | 0.95 | 0.96 | - |
 | I-PER | 0.99 | 0.99 | 0.99 | 558 |
 | **Micro Avg** | **0.98** | **0.96** | **0.97** | **4141** |
-### 训练曲线
-<img width="602" height="338" alt="16e51ab98de36d90c1c3829a86061ce4" src="https://github.com/user-attachments/assets/f2e5dac1-a160-48ca-b562-7a064ea601b6" />
-<img width="1112" height="383" alt="78dc19eaa75e60db649ea489df90982d" src="https://github.com/user-attachments/assets/d161ba4b-4d08-45b3-9092-a1c0262afc42" />
-<img width="686" height="416" alt="93be1c039abd130067117a65abd1afc6" src="https://github.com/user-attachments/assets/8529cbc0-c9e0-44cb-af13-ae77ebe75dc9" />
 
-### 结果分析
-*   **人名（PER）识别效果最好**，F1 达到 0.99，说明模型对名称类实体学习充分。
-*   **验证集 F1 稳定在 0.93 以上**，训练过程中没有明显的过拟合现象。
-*   **组织名（ORG）召回率相对较低**（0.91），部分组织名称可能被漏标，这是后续可以优化的方向。
+**训练曲线**
 
-### MSRA + chinese-bert-wwm
+<img width="602" height="338" alt="训练loss" src="https://github.com/user-attachments/assets/f2e5dac1-a160-48ca-b562-7a064ea601b6" />
+<img width="1112" height="383" alt="验证曲线" src="https://github.com/user-attachments/assets/d161ba4b-4d08-45b3-9092-a1c0262afc42" />
+<img width="686" height="416" alt="测试F1" src="https://github.com/user-attachments/assets/8529cbc0-c9e0-44cb-af13-ae77ebe75dc9" />
+
+**结果分析**
+
+* 人名（PER）识别效果最好，F1 达到 0.99，说明模型对名称类实体学习充分。
+* 验证集 F1 稳定在 0.93 以上，训练过程中没有明显的过拟合现象。
+* 组织名（ORG）召回率相对较低（0.91），部分组织名称可能被漏标，这是后续可以优化的方向。
+
+---
+
+### 2.2 MSRA + chinese-bert-wwm
 
 **最佳验证集 F1：0.9332**
 
@@ -97,16 +107,21 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | I-PER | 0.99 | 0.99 | 0.99 | 558 |
 | **Micro Avg** | **0.99** | **0.96** | **0.97** | **4141** |
 
-**训练曲线：**
-<img width="498" height="312" alt="156b0daf00097be9ba7ef68cf9e55f5e" src="https://github.com/user-attachments/assets/358ac79f-2790-4b06-9cd2-202f18a2f6eb" />
-<img width="1011" height="321" alt="e28d5a82a684d654be008529677c2ae7" src="https://github.com/user-attachments/assets/86f9a963-df91-471f-bb79-b6a4a7d31b78" />
-<img width="502" height="313" alt="2f54946235817c25238570981e938870" src="https://github.com/user-attachments/assets/48fe5a89-952a-47d2-aa3c-03cc9baeaaa8" />
+**训练曲线**
 
-**分析：**
-- 与 bert-base-chinese（0.9123）相比，chinese-bert-wwm 在 MSRA 上略高 0.0011
-- 全词掩码在规范的新闻文本上优势不明显
-- B-ORG 的召回稍有下降，但整体保持稳定
-### Weibo + chinese-bert-wwm
+<img width="498" height="312" alt="训练loss" src="https://github.com/user-attachments/assets/358ac79f-2790-4b06-9cd2-202f18a2f6eb" />
+<img width="1011" height="321" alt="验证曲线" src="https://github.com/user-attachments/assets/86f9a963-df91-471f-bb79-b6a4a7d31b78" />
+<img width="502" height="313" alt="测试F1" src="https://github.com/user-attachments/assets/48fe5a89-952a-47d2-aa3c-03cc9baeaaa8" />
+
+**结果分析**
+
+* 与 bert-base-chinese（0.9123）相比，chinese-bert-wwm 在 MSRA 上略高 0.0011。
+* 全词掩码在规范的新闻文本上优势不明显。
+* B-ORG 的召回稍有下降，但整体保持稳定。
+
+---
+
+### 2.3 Weibo + chinese-bert-wwm
 
 **最佳验证集 F1：0.7282**
 
@@ -132,16 +147,21 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | I-PER.NOM | 0.89 | 0.83 | 0.86 | 213 |
 | **Micro Avg** | **0.68** | **0.70** | **0.69** | **1072** |
 
-**训练曲线：**
-<img width="497" height="317" alt="image" src="https://github.com/user-attachments/assets/6a51f42b-171d-48e9-b50b-7eb07ddbd97b" />
-<img width="1017" height="321" alt="image" src="https://github.com/user-attachments/assets/ab949485-427e-42e6-a7e4-00455e4c0e1b" />
-<img width="498" height="318" alt="image" src="https://github.com/user-attachments/assets/f1eff8c2-cb24-4055-9b93-29a3a1779523" />
+**训练曲线**
 
-**分析：**
-- GPE.NAM 识别最好（F1 0.86-0.87），地名和组织名（LOC.NAM、ORG.NAM）效果较差
-- GPE.NOM 和 I-GPE.NOM 为 0，因为测试集分别只有 2 个样本，模型学不到
-- 整体 F1 比 MSRA 低约 23 个点，说明 Weibo 口语化、标签细、数据少，难度大
-### Weibo + bert-base-chinese
+<img width="497" height="317" alt="训练loss" src="https://github.com/user-attachments/assets/6a51f42b-171d-48e9-b50b-7eb07ddbd97b" />
+<img width="1017" height="321" alt="验证曲线" src="https://github.com/user-attachments/assets/ab949485-427e-42e6-a7e4-00455e4c0e1b" />
+<img width="498" height="318" alt="测试F1" src="https://github.com/user-attachments/assets/f1eff8c2-cb24-4055-9b93-29a3a1779523" />
+
+**结果分析**
+
+* GPE.NAM 识别最好（F1 0.86-0.87），地名和组织名（LOC.NAM、ORG.NAM）效果较差。
+* GPE.NOM 和 I-GPE.NOM 为 0，因为测试集分别只有 2 个样本，模型学不到。
+* 整体 F1 比 MSRA 低约 23 个点，说明 Weibo 口语化、标签细、数据少，难度大。
+
+---
+
+### 2.4 Weibo + bert-base-chinese
 
 **最佳验证集 F1：0.7259**
 
@@ -167,14 +187,19 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | I-PER.NOM | 0.90 | 0.83 | 0.86 | 213 |
 | **Micro Avg** | **0.67** | **0.66** | **0.66** | **1064** |
 
-**训练曲线：**
-<img width="500" height="321" alt="image" src="https://github.com/user-attachments/assets/6b1dbca4-7454-45b6-9801-b4f78df4eea0" />
-<img width="1003" height="315" alt="image" src="https://github.com/user-attachments/assets/415cab02-1325-449e-8d41-5a2d03b84540" />
-<img width="500" height="325" alt="image" src="https://github.com/user-attachments/assets/6e5c8702-3f0a-47f1-aa89-96d8d3f0c920" />
+**训练曲线**
 
-**分析：**
-- GPE.NAM 识别最好（F1 0.87-0.90），地理实体相对规范
-- GPE.NOM 为 0，测试集仅 2 个样本，无法学习
-- 整体 F1 0.66，与 chinese-bert-wwm（0.69）接近，两个模型在 Weibo 上差距不大
-- 相比 MSRA（0.91），下降约 25 个点，Weibo 口语化、标签细、数据少
+<img width="500" height="321" alt="训练loss" src="https://github.com/user-attachments/assets/6b1dbca4-7454-45b6-9801-b4f78df4eea0" />
+<img width="1003" height="315" alt="验证曲线" src="https://github.com/user-attachments/assets/415cab02-1325-449e-8d41-5a2d03b84540" />
+<img width="500" height="325" alt="测试F1" src="https://github.com/user-attachments/assets/6e5c8702-3f0a-47f1-aa89-96d8d3f0c920" />
 
+**结果分析**
+
+* GPE.NAM 识别最好（F1 0.87-0.90），地理实体相对规范。
+* GPE.NOM 为 0，测试集仅 2 个样本，无法学习。
+* 整体 F1 0.66，与 chinese-bert-wwm（0.69）接近，两个模型在 Weibo 上差距不大。
+* 相比 MSRA（0.91），下降约 25 个点，Weibo 口语化、标签细、数据少。
+
+## 三、总结
+
+实验表明，在规范新闻语料（MSRA）上，BERT 系列模型能达到很高的 F1（约 0.91-0.93），且不同模型间差距很小。在口语化的社交媒体文本（Weibo）上，性能显著下降至 0.66-0.69，说明当前模型对非规范文本的实体识别仍有较大挑战。此外，对比 `ignore` 和 `other` 两种子词对齐策略，后者在 Weibo 上有微弱提升，但整体影响有限。
