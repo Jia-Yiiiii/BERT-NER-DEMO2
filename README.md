@@ -80,14 +80,31 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 *   **验证集 F1 稳定在 0.93 以上**，训练过程中没有明显的过拟合现象。
 *   **组织名（ORG）召回率相对较低**（0.91），部分组织名称可能被漏标，这是后续可以优化的方向。
 
-### 实验配置
-*   **学习率**：2e-5
-*   **Dropout**：0.2
-*   **训练轮数**：30
-*   **对齐策略**：ignore（忽略子词标签）
-*   **模型**：bert-base-chinese
-*   **数据集**：MSRA
+### MSRA + chinese-bert-wwm
 
+**最佳验证集 F1：0.9332**
+
+测试集详细结果：
+
+| 类别 | Precision | Recall | F1 | Support |
+|------|-----------|--------|-----|---------|
+| B-LOC | 0.99 | 0.96 | 0.98 | 643 |
+| B-ORG | 0.98 | 0.96 | 0.97 | 323 |
+| B-PER | 0.99 | 0.98 | 0.99 | 307 |
+| I-LOC | 0.99 | 0.94 | 0.97 | 967 |
+| I-ORG | 0.99 | 0.91 | 0.95 | 1343 |
+| I-PER | 0.99 | 0.99 | 0.99 | 558 |
+| **Micro Avg** | **0.99** | **0.96** | **0.97** | **4141** |
+
+**训练曲线：**
+<img width="498" height="312" alt="156b0daf00097be9ba7ef68cf9e55f5e" src="https://github.com/user-attachments/assets/358ac79f-2790-4b06-9cd2-202f18a2f6eb" />
+<img width="1011" height="321" alt="e28d5a82a684d654be008529677c2ae7" src="https://github.com/user-attachments/assets/86f9a963-df91-471f-bb79-b6a4a7d31b78" />
+<img width="502" height="313" alt="2f54946235817c25238570981e938870" src="https://github.com/user-attachments/assets/48fe5a89-952a-47d2-aa3c-03cc9baeaaa8" />
+
+**分析：**
+- 与 bert-base-chinese（0.9123）相比，chinese-bert-wwm 在 MSRA 上略高 0.0011
+- 全词掩码在规范的新闻文本上优势不明显
+- B-ORG 的召回稍有下降，但整体保持稳定
 ## 待完成实验
 - [ ] MSRA + chinese-bert-wwm
 - [ ] Weibo + bert-base-chinese
