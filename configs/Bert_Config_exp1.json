@@ -1,5 +1,5 @@
 {
-    "data_dir": "./data",
+    "data_dir": "./DATA",
     "train_file": "MSRA/train_5k.txt",
     "dev_file": "MSRA/dev_1k.txt",
     "test_file": "MSRA/test_1k.txt",
