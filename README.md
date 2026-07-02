@@ -47,11 +47,12 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | B-GPE.NOM | 8 |
 | I-GPE.NOM | 8 |
 
-## 数据处理特点
-
-1.  **兼容不同数据格式**：统一的数据读取函数同时处理 MSRA（`0` 分隔）和 Weibo（空行分隔）的数据格式。
-2.  **独立标签映射**：由于标签体系不同，MSRA 和 Weibo 分别构建自己的 `label2id` 映射表。
-3.  **子词对齐策略**：针对 BERT 分词器将词切分为子词（subtoken）的问题，采用 **“忽略策略”**。即仅保留每个词第一个子词的原始标签，其余子词标注为 `O`（在损失计算中被忽略），避免标签冲突。
+### 数据处理
+<img width="832" height="327" alt="image" src="https://github.com/user-attachments/assets/8facc656-a167-4d23-aa6a-984fbd225345" />
+<img width="617" height="330" alt="image" src="https://github.com/user-attachments/assets/c9db921c-50a5-4b22-b3d2-8df0a501a530" />
+1. 读取时兼容 MSRA（`0` 分隔）和 Weibo（空行分隔）两种格式。
+2. 自动从数据中构建标签映射。MSRA 和 Weibo 标签体系不同，代码分别生成各自的 label2id，不共用。
+3. BERT 分词会产生子词，导致标签数量对不上。使用 `word_ids` 对齐，只保留每个词首个子词的原始标签，后续子词标 `O` 忽略。同时也支持标签传播策略（`other`），用于对比实验。
 
 ## 实验结果
 
