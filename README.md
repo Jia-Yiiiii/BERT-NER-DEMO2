@@ -66,6 +66,14 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 ## 二、实验结果
 
+### 整体结果对比
+| 模型 | 数据集 | 对齐策略 | 最佳验证 F1 | 测试集 F1 |
+|------|--------|----------|-------------|-----------|
+| bert-base-chinese | MSRA | ignore | 0.9353 | 0.9123 |
+| chinese-bert-wwm | MSRA | ignore | 0.9332 | 0.9134 |
+| bert-base-chinese | Weibo | ignore | 0.7259 | 0.6617 |
+| chinese-bert-wwm | Weibo | ignore | 0.7282 | 0.6876 |
+| chinese-bert-wwm | Weibo | other | 0.7259 | 0.6617 |
 ### 2.1 MSRA + bert-base-chinese
 
 **最佳验证集 F1：0.9353**
