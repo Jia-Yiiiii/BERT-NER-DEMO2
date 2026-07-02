@@ -1,8 +1,8 @@
 {
     "data_dir": "./DATA",
-    "train_file": "MSRA/train_5k.txt",
-    "dev_file": "MSRA/dev_1k.txt",
-    "test_file": "MSRA/test_1k.txt",
+    "train_file": "MSRA/train.txt",
+    "dev_file": "MSRA/dev.txt",
+    "test_file": "MSRA/test.txt",
     "model_name": "hfl/chinese-bert-wwm",
     "dropout_rate": 0.2,
     "embedding_dim": 768,
