@@ -244,3 +244,24 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 ## 三、总结
 
 实验表明，在规范新闻语料（MSRA）上，BERT 系列模型能达到很高的 F1，且不同模型间差距很小。在口语化的社交媒体文本（Weibo）上，性能显著下降至 0.66-0.69。此外，对比 `ignore` 和 `other` 两种子词对齐策略，后者在 Weibo 上有微弱提升，但整体影响有限。
+## 项目结构
+BERT-NER-DEMO2/
+├── DATA/
+│ ├── MSRA/
+│ │ ├── train.txt
+│ │ ├── dev.txt
+│ │ └── test.txt
+│ └── weibo/
+│ ├── train.txt
+│ ├── dev.txt
+│ └── test.txt
+├── configs/
+│ └── Bert_Config_exp1.json
+├── data.py
+├── model.py
+├── trainer.py
+├── utils.py
+├── requirements.txt
+├── .gitignore
+├── LICENSE
+└── README.md
