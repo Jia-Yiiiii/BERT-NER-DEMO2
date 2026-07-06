@@ -1,4 +1,5 @@
 import os
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 import json
 import torch
 import swanlab
@@ -8,8 +9,6 @@ from tqdm import tqdm
 from data import NERDataset
 from model import BertForNER
 from utils import set_seed, evaluate_ner, decode_predict
-
-
 class Trainer:
     def __init__(self, config):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -27,21 +26,19 @@ class Trainer:
 
     def load_data(self):
         tokenizer = BertTokenizer.from_pretrained(self.config["model_name"])
-        train_path = os.path.join(self.config["data_dir"], self.config["train_file"])
-        dev_path = os.path.join(self.config["data_dir"], self.config["dev_file"])
-        test_path = os.path.join(self.config["data_dir"], self.config["test_file"])
+        train_path = self.config["data_dir"] + "/" + self.config["train_file"]
+        dev_path = self.config["data_dir"] + "/" + self.config["dev_file"]
+        test_path = self.config["data_dir"] + "/" + self.config["test_file"]
         x = self.config.get("align_type", "ignore")
-
         train_set = NERDataset(train_path, tokenizer, self.config["max_len"], x)
         dev_set = NERDataset(dev_path, tokenizer, self.config["max_len"], x)
         test_set = NERDataset(test_path, tokenizer, self.config["max_len"], x)
-
         self.train_loader = train_set.get_loader(self.config["batch_size"], True)
         self.dev_loader = dev_set.get_loader(self.config["batch_size"], False)
         self.test_loader = test_set.get_loader(self.config["batch_size"], False)
-
         self.label2id = train_set.label2id
         self.id2label = train_set.id2label
+        print("标签数量:", len(self.label2id))
 
     def init_model(self):
         self.config["num_labels"] = len(self.label2id)
