@@ -6,7 +6,7 @@ class NERDataset(Dataset):
     def __init__(self, data_path, tokenizer, max_len, align_type='ignore'):
         self.tokenizer = tokenizer
         self.max_len = max_len
-        self.at = align_type
+        self.align_type = align_type
         self.data = self.read_data(data_path)
         labels = set(['O'])
         for tokens, label_list in self.data:
@@ -45,47 +45,53 @@ class NERDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        tokens, labels = self.data[idx]
-        encoding = self.tokenizer(
-            tokens,
+        words, tags = self.data[idx]
+
+        tokenized = self.tokenizer(
+            words,
             is_split_into_words=True,
             max_length=self.max_len,
             padding='max_length',
             truncation=True,
             return_tensors=None
         )
-        word_ids = encoding.word_ids()
-        align = []
-        last = None
 
-        for wid in word_ids:
-            if wid is None:
-                align.append(self.label2id['O'])
+        word_ids = tokenized.word_ids()
+
+        label_ids = []
+        currentword = -1
+
+        for i in range(len(word_ids)):
+            id = word_ids[i]
+
+            if id is None:
+                label_ids.append(self.label2id['O'])
                 continue
 
-            if wid != last:
-                if wid < len(labels):
-                    align.append(self.label2id[labels[wid]])
+            if id != currentword:
+                currentword = id
+                if id < len(tags):
+                    label_ids.append(self.label2id[tags[id]])
                 else:
-                    align.append(self.label2id['O'])
-                last = wid
+                    label_ids.append(self.label2id['O'])
             else:
-                if self.at == 'ignore':
-                    align.append(self.label2id['O'])
-                else:
-                    if wid < len(labels):
-                        tag = labels[wid]
-                        if tag.startswith('B-'):
-                            tag = 'I-' + tag[2:]
-                        align.append(self.label2id.get(tag, self.label2id['O']))
-                    else:
-                        align.append(self.label2id['O'])
 
-        return (
-            torch.tensor(encoding['input_ids'], dtype=torch.long),
-            torch.tensor(encoding['attention_mask'], dtype=torch.long),
-            torch.tensor(align, dtype=torch.long)
-        )
+                if self.align_type == 'ignore':
+                    label_ids.append(self.label2id['O'])
+                else:
+
+                    if id < len(tags):
+                        t = tags[id]
+                        if t.startswith('B-'):
+                            t = 'I-' + t[2:]
+                        label_ids.append(self.label2id.get(t, self.label2id['O']))
+                    else:
+                        label_ids.append(self.label2id['O'])
+
+        input_ids = torch.tensor(tokenized['input_ids'], dtype=torch.long)
+        mask = torch.tensor(tokenized['attention_mask'], dtype=torch.long)
+        label_tensor = torch.tensor(label_ids, dtype=torch.long)
+        return input_ids, mask, label_tensor
 
     def collate_fn(self, batch):
         all_input_ids = []
