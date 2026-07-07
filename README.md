@@ -222,8 +222,8 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 
 ## 三、总结
-
-实验表明，在规范新闻语料（MSRA）上，BERT 系列模型能达到很高的 F1，且不同模型间差距很小。在口语化的社交媒体文本（Weibo）上，性能显著下降至 0.66-0.69。此外，对比 `ignore` 和 `other` 两种子词对齐策略，后者在 Weibo 上有微弱提升，但整体影响有限。
+从结果看，在规范的MSRA数据集上，bert-base-chinese和chinese-bert-wwm的表现都很好，测试F1都在0.91以上。但在Weibo数据上，性能下降很明显，F1值普遍在0.66-0.69之间，说明社交媒体文本的NER任务难度大很多。
+对比模型，chinese-bert-wwm在Weibo上的表现比bert-base-chinese好一些，说明全词掩码在非规范文本上可能有点帮助。ignore和other两个方式结果完全一样，可能在这个场景下影响不大。
 ## 项目结构
 BERT-NER-DEMO2/
 ├── DATA/
