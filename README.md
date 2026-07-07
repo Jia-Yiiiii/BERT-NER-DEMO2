@@ -69,46 +69,56 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 ### 整体结果对比
 | 模型 | 数据集 | 对齐策略 | 最佳验证 F1 | 测试集 F1 |
 |------|--------|----------|-------------|-----------|
-| bert-base-chinese | MSRA | ignore | 0.9353 | 0.9123 |
-| chinese-bert-wwm | MSRA | ignore | 0.9332 | 0.9134 |
+| bert-base-chinese | MSRA | ignore | 0.9352 | 0.9218 |
+| chinese-bert-wwm | MSRA | ignore | 0.9331 | 0.9134 |
 | bert-base-chinese | Weibo | ignore | 0.7258 | 0.66172 |
 | chinese-bert-wwm | Weibo | ignore | 0.7281 | 0.6875 |
 | chinese-bert-wwm | Weibo | other | 0.7281 | 0.6875 |
+
 ### 2.1 MSRA + bert-base-chinese
 
 测试集详细结果：
 
-| 类别 | Precision | Recall | F1 | Support |
-|------|-----------|--------|-----|---------|
+| 标签 | precision | recall | f1-score | support |
+|:---|:---:|:---:|:---:|:---:|
 | B-LOC | 0.98 | 0.95 | 0.97 | 643 |
 | B-ORG | 0.97 | 0.91 | 0.94 | 323 |
 | B-PER | 0.99 | 0.98 | 0.99 | 307 |
 | I-LOC | 0.97 | 0.95 | 0.96 | 967 |
-| I-ORG | 0.97 | 0.95 | 0.96 | - |
+| I-ORG | 0.97 | 0.95 | 0.96 | 1343 |
 | I-PER | 0.99 | 0.99 | 0.99 | 558 |
-| **Micro Avg** | **0.98** | **0.96** | **0.97** | **4141** |
+| 0 | 0.00 | 0.00 | 0.00 | 0 |
+| **accuracy** | | | **0.96** | **4141** |
+| **macro avg** | **0.84** | **0.82** | **0.83** | **4141** |
+| **weighted avg** | **0.98** | **0.96** | **0.97** | **4141** |
 
 **训练曲线**
+<img width="481" height="383" alt="image" src="https://github.com/user-attachments/assets/a36917a5-33f9-4735-9546-9e6912c82ed1" />
+<img width="1025" height="390" alt="image" src="https://github.com/user-attachments/assets/47321c13-7018-4b6b-bec6-ef209b0b5f68" />
+<img width="492" height="372" alt="image" src="https://github.com/user-attachments/assets/ede39df5-406a-462f-809a-0c108cfffc41" />
 
 
 ---
 
 ### 2.2 MSRA + chinese-bert-wwm
 
-
 测试集详细结果：
-
-| 类别 | Precision | Recall | F1 | Support |
-|------|-----------|--------|-----|---------|
+| 标签 | precision | recall | f1-score | support |
+|:---|:---:|:---:|:---:|:---:|
 | B-LOC | 0.99 | 0.96 | 0.98 | 643 |
 | B-ORG | 0.98 | 0.96 | 0.97 | 323 |
 | B-PER | 0.99 | 0.98 | 0.99 | 307 |
 | I-LOC | 0.99 | 0.94 | 0.97 | 967 |
 | I-ORG | 0.99 | 0.91 | 0.95 | 1343 |
 | I-PER | 0.99 | 0.99 | 0.99 | 558 |
-| **Micro Avg** | **0.99** | **0.96** | **0.97** | **4141** |
-
+| 0 | 0.00 | 0.00 | 0.00 | 0 |
+| **accuracy** | | | **0.95** | **4141** |
+| **macro avg** | **0.85** | **0.82** | **0.83** | **4141** |
+| **weighted avg** | **0.99** | **0.95** | **0.97** | **4141** |
 **训练曲线**
+<img width="467" height="372" alt="image" src="https://github.com/user-attachments/assets/764070a6-1ed2-4ef8-aecb-2130cd993853" />
+<img width="947" height="377" alt="image" src="https://github.com/user-attachments/assets/6e9e9a20-96f7-4a1c-9a25-808296d73ad0" />
+<img width="553" height="401" alt="image" src="https://github.com/user-attachments/assets/6882a6f8-e7a9-47d9-afde-ff346b23bfa1" />
 
 
 ---
