@@ -9,13 +9,13 @@ from tqdm import tqdm
 from data import NERDataset
 from model import BertForNER
 from utils import set_seed, evaluate_ner, decode_predict
+
 class Trainer:
     def __init__(self, config):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.config = config
         self.num_epochs = config["epochs"]
         self.best_f1 = 0.0
-        self.counter = 0
         self.model = None
         self.train_loader = None
         self.dev_loader = None
@@ -26,19 +26,21 @@ class Trainer:
 
     def load_data(self):
         tokenizer = BertTokenizer.from_pretrained(self.config["model_name"])
-        train_path = self.config["data_dir"] + "/" + self.config["train_file"]
-        dev_path = self.config["data_dir"] + "/" + self.config["dev_file"]
-        test_path = self.config["data_dir"] + "/" + self.config["test_file"]
-        x = self.config.get("align_type", "ignore")
-        train_set = NERDataset(train_path, tokenizer, self.config["max_len"], x)
-        dev_set = NERDataset(dev_path, tokenizer, self.config["max_len"], x)
-        test_set = NERDataset(test_path, tokenizer, self.config["max_len"], x)
+        train_path = os.path.join(self.config["data_dir"], self.config["train_file"])
+        dev_path = os.path.join(self.config["data_dir"], self.config["dev_file"])
+        test_path = os.path.join(self.config["data_dir"], self.config["test_file"])
+        type = self.config.get("align_type", "ignore")
+
+        train_set = NERDataset(train_path, tokenizer, self.config["max_len"],type)
+        dev_set = NERDataset(dev_path, tokenizer, self.config["max_len"], type)
+        test_set = NERDataset(test_path, tokenizer, self.config["max_len"], type)
+
         self.train_loader = train_set.get_loader(self.config["batch_size"], True)
         self.dev_loader = dev_set.get_loader(self.config["batch_size"], False)
         self.test_loader = test_set.get_loader(self.config["batch_size"], False)
+
         self.label2id = train_set.label2id
         self.id2label = train_set.id2label
-        print("标签数量:", len(self.label2id))
 
     def init_model(self):
         self.config["num_labels"] = len(self.label2id)
@@ -46,16 +48,23 @@ class Trainer:
         self.model.to(self.device)
 
     def save_model(self):
+        save_dir = os.path.dirname(self.config["save_path"])
+        os.makedirs(save_dir, exist_ok=True)
+
+        name = os.path.basename(self.config["save_path"]).split('.')[0]
+
         torch.save(self.model.state_dict(), self.config["save_path"])
 
-        with open("training_config.json", "w", encoding="utf-8") as f:
-            json.dump(self.config, f, indent=2)
+        with open(os.path.join(save_dir, name + "_config.json"), "w", encoding="utf-8") as f:
+            json.dump(self.config, f)
 
-        with open("label2id.json", "w", encoding="utf-8") as f:
-            json.dump(self.label2id, f, indent=2)
+        with open(os.path.join(save_dir, name + "_label2id.json"), "w", encoding="utf-8") as f:
+            json.dump(self.label2id, f)
 
         tokenizer = BertTokenizer.from_pretrained(self.config["model_name"])
-        tokenizer.save_pretrained("tokenizer")
+        tokenizer.save_pretrained(os.path.join(save_dir, name + "_tokenizer"))
+
+
 
     def train(self):
         swanlab.init(
@@ -70,7 +79,7 @@ class Trainer:
         )
         optimizer = AdamW(self.model.parameters(), lr=self.config["learning_rate"])
 
-        loss_fn = torch.nn.CrossEntropyLoss(ignore_index=-100)
+        loss_fn = torch.nn.CrossEntropyLoss()
 
         for epoch in range(self.num_epochs):
             self.model.train()
@@ -85,9 +94,11 @@ class Trainer:
                 optimizer.zero_grad()
                 logits = self.model(input_ids=input_ids, attention_mask=attention_mask)
 
-                mask = attention_mask.view(-1) == 1
-                flat_logits = logits.view(-1, logits.size(-1))[mask]
-                flat_labels = labels.view(-1)[mask]
+                logits_flat = logits.reshape(-1, logits.size(-1))
+                labels_flat = labels.reshape(-1)
+                mask_flat = attention_mask.reshape(-1) == 1
+                flat_logits = logits_flat[mask_flat]
+                flat_labels = labels_flat[mask_flat]
                 loss_val = loss_fn(flat_logits, flat_labels)
 
                 loss_val.backward()
@@ -113,15 +124,9 @@ class Trainer:
 
             if eval_f1 > self.best_f1:
                 self.best_f1 = eval_f1
-                self.counter = 0
                 self.save_model()
                 print("保存最佳模型", eval_f1)
                 evaluate_ner(all_labels, all_preds, plot=False)
-            else:
-                self.counter += 1
-
-            if self.counter >= self.config["patience"]:
-                break
 
         print("best f1:", self.best_f1)
         self.test()
@@ -133,7 +138,7 @@ class Trainer:
         count = 0
         all_preds = []
         all_labels = []
-        loss_fct = torch.nn.CrossEntropyLoss(ignore_index=-100)
+        loss_fct = torch.nn.CrossEntropyLoss()
 
         with torch.no_grad():
             for batch in self.dev_loader:
@@ -142,10 +147,12 @@ class Trainer:
                 labels = batch[2].to(self.device)
                 logits = self.model(input_ids=input_ids, attention_mask=attention_mask)
 
-                mask = attention_mask.view(-1) == 1
-                flat_logits = logits.view(-1, logits.size(-1))[mask]
-                flat_labels = labels.view(-1)[mask]
-                loss = loss_fct(flat_logits, flat_labels)
+                logits_flat = logits.reshape(-1, logits.size(-1))
+                labels_flat = labels.reshape(-1)
+                mask_flat = attention_mask.reshape(-1) == 1
+                valid_logits = logits_flat[mask_flat]
+                valid_labels = labels_flat[mask_flat]
+                loss = loss_fct(valid_logits, valid_labels)
 
                 total_loss = total_loss + loss.item()
                 count = count + 1
