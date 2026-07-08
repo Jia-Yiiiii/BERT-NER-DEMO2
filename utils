@@ -1,11 +1,7 @@
 import random
 import numpy as np
 import torch
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.metrics import classification_report, confusion_matrix
-plt.rcParams['font.sans-serif'] = ['SimHei']
-plt.rcParams['axes.unicode_minus'] = False
+from sklearn.metrics import classification_report
 
 def set_seed(seed=42):
     random.seed(seed)
@@ -45,9 +41,8 @@ def compute_ner_f1(y_true, y_pred):
             else:
                 i = i + 1
 
-
         used = []
-        for i in  pre_entity:
+        for i in pre_entity:
             matched = False
             for x in true_entities:
                 if x == i and x not in used:
@@ -100,26 +95,12 @@ def evaluate_ner(y_true, y_pred, plot=True, save_path=None):
         report = classification_report(flat_true, flat_pred, labels=labels, zero_division=0)
         print(report)
 
-    if plot and flat_true:
-        labels = sorted(set(flat_true + flat_pred))
-        cm = confusion_matrix(flat_true, flat_pred, labels=labels)
-
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-                    xticklabels=labels, yticklabels=labels)
-        plt.xlabel('预测')
-        plt.ylabel('真实')
-        plt.title('混淆矩阵')
-        plt.tight_layout()
-        if save_path:
-            plt.savefig(save_path)
-        plt.show()
-
     return f1, p, r
 
+
 def decode_predict(input_ids, preds, labels, attention_mask, id2label):
-    all_preds = []
-    all_labels = []
+    all_pred = []
+    all_label = []
     for i in range(len(input_ids)):
         ps = []
         ls = []
@@ -128,6 +109,6 @@ def decode_predict(input_ids, preds, labels, attention_mask, id2label):
             if labels[i][j].item() != -100:
                 ps.append(id2label.get(preds[i][j].item(), 'O'))
                 ls.append(id2label.get(labels[i][j].item(), 'O'))
-        all_preds.append(ps)
-        all_labels.append(ls)
-    return all_preds, all_labels
+        all_pred.append(ps)
+        all_label.append(ls)
+    return all_pred, all_label
