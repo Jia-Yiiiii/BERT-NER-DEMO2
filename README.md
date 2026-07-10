@@ -74,7 +74,7 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | chinese-bert-wwm | MSRA | ignore | 0.9338 | 0.9148 |
 | bert-base-chinese | Weibo | ignore | 0.7258 | 0.66172 |
 | chinese-bert-wwm | Weibo | ignore | 0.7281 | 0.6875 |
-| chinese-bert-wwm | Weibo | other | 0.7281 | 0.6875 |
+| chinese-bert-wwm | Weibo | other | 0.7270 | 0.6745 |
 
 ### 2.1 MSRA + bert-base-chinese
 
@@ -200,33 +200,34 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 测试集详细结果：
 
 | 标签 | precision | recall | f1-score | support |
-|:---|:---:|:---:|:---:|:---:|
-| B-GPE.NAM | 0.88 | 0.88 | 0.88 | 26 |
+|------|-----------|--------|----------|---------|
+| B-GPE.NAM | 0.79 | 0.88 | 0.84 | 26 |
 | B-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
 | B-LOC.NAM | 0.62 | 0.83 | 0.71 | 6 |
-| B-LOC.NOM | 1.00 | 0.50 | 0.67 | 6 |
-| B-ORG.NAM | 0.83 | 0.62 | 0.71 | 47 |
-| B-ORG.NOM | 0.67 | 0.80 | 0.73 | 5 |
-| B-PER.NAM | 0.97 | 0.85 | 0.91 | 89 |
-| B-PER.NOM | 0.97 | 0.79 | 0.87 | 208 |
-| I-GPE.NAM | 0.90 | 0.84 | 0.87 | 31 |
+| B-LOC.NOM | 0.75 | 0.50 | 0.60 | 6 |
+| B-ORG.NAM | 0.81 | 0.45 | 0.58 | 47 |
+| B-ORG.NOM | 0.57 | 0.80 | 0.67 | 5 |
+| B-PER.NAM | 0.95 | 0.83 | 0.89 | 89 |
+| B-PER.NOM | 0.97 | 0.84 | 0.90 | 208 |
+| I-GPE.NAM | 0.74 | 0.84 | 0.79 | 31 |
 | I-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
-| I-LOC.NAM | 0.88 | 0.88 | 0.88 | 16 |
-| I-LOC.NOM | 0.67 | 0.29 | 0.40 | 7 |
-| I-ORG.NAM | 0.88 | 0.65 | 0.75 | 126 |
-| I-ORG.NOM | 0.50 | 0.80 | 0.62 | 5 |
-| I-PER.NAM | 0.96 | 0.85 | 0.90 | 155 |
-| I-PER.NOM | 0.92 | 0.86 | 0.89 | 239 |
-| 0 | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.80** | **968** |
-| **macro avg** | **0.80** | **0.73** | **0.75** | **968** |
-| **weighted avg** | **0.92** | **0.80** | **0.85** | **968** |
+| I-LOC.NAM | 0.70 | 0.88 | 0.78 | 16 |
+| I-LOC.NOM | 0.75 | 0.43 | 0.55 | 7 |
+| I-ORG.NAM | 0.89 | 0.47 | 0.61 | 126 |
+| I-ORG.NOM | 0.67 | 0.80 | 0.73 | 5 |
+| I-PER.NAM | 0.99 | 0.80 | 0.89 | 155 |
+| I-PER.NOM | 0.92 | 0.90 | 0.91 | 239 |
+| O | 0.00 | 0.00 | 0.00 | 0 |
+| **accuracy** | | | **0.78** | **968** |
+| **macro avg** | **0.77** | **0.72** | **0.73** | **968** |
+| **weighted avg** | **0.92** | **0.78** | **0.83** | **968** |
 
 **训练曲线**
 
-<img width="470" height="372" alt="image" src="https://github.com/user-attachments/assets/c62f9d85-50f3-480f-ad31-7f39bbf0ede7" />
-<img width="942" height="377" alt="image" src="https://github.com/user-attachments/assets/800d260f-762c-41d7-a052-1969c333a541" />
-<img width="611" height="360" alt="image" src="https://github.com/user-attachments/assets/c78a1cca-d624-4570-9183-738db04355b4" />
+<img width="462" height="377" alt="image" src="https://github.com/user-attachments/assets/41141296-a92d-4e58-b5f3-c0ef497add41" />
+<img width="955" height="380" alt="image" src="https://github.com/user-attachments/assets/7acdb971-ee0a-4d90-87af-c6ecf3d1636d" />
+<img width="523" height="397" alt="image" src="https://github.com/user-attachments/assets/f8b23c98-1dee-4934-a5bf-828f36ecfb99" />
+
 
 ---
 
