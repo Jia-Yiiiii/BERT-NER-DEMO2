@@ -72,7 +72,7 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 |------|--------|----------|-------------|-----------|
 | bert-base-chinese | MSRA | ignore | 0.9352 | 0.9218 |
 | chinese-bert-wwm | MSRA | ignore | 0.9338 | 0.9148 |
-| bert-base-chinese | Weibo | ignore | 0.7258 | 0.66172 |
+| bert-base-chinese | Weibo | ignore | 0.7268 | 0.6594 |
 | chinese-bert-wwm | Weibo | ignore | 0.7270 | 0.6745 |
 | chinese-bert-wwm | Weibo | other | 0.7270 | 0.6745 |
 
@@ -168,33 +168,34 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 测试集详细结果：
 
 | 标签 | precision | recall | f1-score | support |
-|:---|:---:|:---:|:---:|:---:|
-| B-GPE.NAM | 0.89 | 0.92 | 0.91 | 26 |
+|------|-----------|--------|----------|---------|
+| B-GPE.NAM | 0.88 | 0.88 | 0.88 | 26 |
 | B-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
 | B-LOC.NAM | 0.45 | 0.83 | 0.59 | 6 |
-| B-LOC.NOM | 1.00 | 0.50 | 0.67 | 6 |
-| B-ORG.NAM | 0.76 | 0.47 | 0.58 | 47 |
-| B-ORG.NOM | 0.67 | 0.80 | 0.73 | 5 |
-| B-PER.NAM | 0.96 | 0.79 | 0.86 | 89 |
-| B-PER.NOM | 0.97 | 0.80 | 0.87 | 208 |
-| I-GPE.NAM | 0.90 | 0.87 | 0.89 | 31 |
+| B-LOC.NOM | 1.00 | 0.83 | 0.91 | 6 |
+| B-ORG.NAM | 0.71 | 0.47 | 0.56 | 47 |
+| B-ORG.NOM | 0.80 | 0.80 | 0.80 | 5 |
+| B-PER.NAM | 0.95 | 0.82 | 0.88 | 89 |
+| B-PER.NOM | 0.95 | 0.82 | 0.88 | 208 |
+| I-GPE.NAM | 0.91 | 0.94 | 0.92 | 31 |
 | I-GPE.NOM | 0.00 | 0.00 | 0.00 | 1 |
 | I-LOC.NAM | 0.54 | 0.88 | 0.67 | 16 |
-| I-LOC.NOM | 0.80 | 0.57 | 0.67 | 7 |
-| I-ORG.NAM | 0.88 | 0.50 | 0.64 | 126 |
-| I-ORG.NOM | 0.67 | 0.80 | 0.73 | 5 |
-| I-PER.NAM | 0.97 | 0.82 | 0.89 | 155 |
-| I-PER.NOM | 0.94 | 0.85 | 0.89 | 239 |
-| 0 | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.76** | **968** |
-| **macro avg** | **0.73** | **0.68** | **0.68** | **968** |
-| **weighted avg** | **0.93** | **0.76** | **0.83** | **968** |
+| I-LOC.NOM | 1.00 | 1.00 | 1.00 | 7 |
+| I-ORG.NAM | 0.91 | 0.48 | 0.62 | 126 |
+| I-ORG.NOM | 1.00 | 0.80 | 0.89 | 5 |
+| I-PER.NAM | 0.96 | 0.79 | 0.87 | 155 |
+| I-PER.NOM | 0.93 | 0.87 | 0.90 | 239 |
+| O | 0.00 | 0.00 | 0.00 | 0 |
+| **accuracy** | | | **0.77** | **968** |
+| **macro avg** | **0.76** | **0.72** | **0.73** | **968** |
+| **weighted avg** | **0.92** | **0.77** | **0.83** | **968** |
 
 **训练曲线**
 
-<img width="468" height="372" alt="image" src="https://github.com/user-attachments/assets/2d1e31d1-e25b-4546-94fd-42456c9fda0d" />
-<img width="947" height="377" alt="image" src="https://github.com/user-attachments/assets/24b76e60-a82d-4110-b22c-51f82a374d7c" />
-<img width="552" height="386" alt="image" src="https://github.com/user-attachments/assets/df065412-3cc5-4bdf-94a8-b753649e6f0e" />
+<img width="495" height="396" alt="image" src="https://github.com/user-attachments/assets/60df5fc1-a1e4-43a1-bf9e-7332aba2f018" />
+<img width="982" height="400" alt="image" src="https://github.com/user-attachments/assets/0af548b3-7218-442a-9fb9-6291acb60734" />
+<img width="476" height="387" alt="image" src="https://github.com/user-attachments/assets/17797a7b-e6fc-455a-8bd9-3cbd2334a6a8" />
+
 
 ### 2.5 Weibo + chinese-bert-wwm (align_type='other')
 
