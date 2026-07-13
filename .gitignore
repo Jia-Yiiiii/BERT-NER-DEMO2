@@ -1,0 +1,31 @@
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 模型文件（太大，不上传）
+*.pth
+*.pt
+*.ckpt
+checkpoints/
+
+# 数据文件
+DATA/
+processed/
+*.txt
+!README.md
+
+# 日志和结果
+*.log
+test_results.png
+
+# 实验追踪
+swanlab/
+
+# IDE配置
+.vscode/
+.idea/
+*.swp
+
+# 其他
+.DS_Store
