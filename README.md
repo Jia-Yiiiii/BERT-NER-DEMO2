@@ -70,7 +70,7 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 | 模型 | 数据集 | 对齐策略 | 最佳验证 F1 | 测试集 F1 |
 |------|--------|----------|-------------|-----------|
-| bert-base-chinese | MSRA | ignore | 0.9352 | 0.9218 |
+| bert-base-chinese | MSRA | ignore | 0.9263| 0.9192 |
 | chinese-bert-wwm | MSRA | ignore | 0.9338 | 0.9148 |
 | bert-base-chinese | Weibo | ignore | 0.7268 | 0.6594 |
 | chinese-bert-wwm | Weibo | ignore | 0.7270 | 0.6745 |
@@ -80,24 +80,21 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 测试集详细结果：
 
-| 标签 | precision | recall | f1-score | support |
-|:---|:---:|:---:|:---:|:---:|
-| B-LOC | 0.98 | 0.95 | 0.97 | 643 |
-| B-ORG | 0.97 | 0.91 | 0.94 | 323 |
-| B-PER | 0.99 | 0.98 | 0.99 | 307 |
-| I-LOC | 0.97 | 0.95 | 0.96 | 967 |
-| I-ORG | 0.97 | 0.95 | 0.96 | 1343 |
-| I-PER | 0.99 | 0.99 | 0.99 | 558 |
-| 0 | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.96** | **4141** |
-| **macro avg** | **0.84** | **0.82** | **0.83** | **4141** |
-| **weighted avg** | **0.98** | **0.96** | **0.97** | **4141** |
+| 实体类型 | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| LOC      | 94.52%    | 93.93% | 94.23%   | 643     |
+| ORG      | 80.54%    | 92.26% | 86.00%   | 323     |
+| PER      | 96.14%    | 97.39% | 96.76%   | 307     |
+| micro avg | 90.98%   | 94.34% | 92.63%   | 1273    |
+| macro avg | 90.40%   | 94.53% | 92.33%   | 1273    |
+| weighted avg | 91.37% | 94.34% | 92.75% | 1273    |
 
 **训练曲线**
 
-<img width="481" height="383" alt="image" src="https://github.com/user-attachments/assets/a36917a5-33f9-4735-9546-9e6912c82ed1" />
-<img width="1025" height="390" alt="image" src="https://github.com/user-attachments/assets/47321c13-7018-4b6b-bec6-ef209b0b5f68" />
-<img width="492" height="372" alt="image" src="https://github.com/user-attachments/assets/ede39df5-406a-462f-809a-0c108cfffc41" />
+<img width="467" height="392" alt="image" src="https://github.com/user-attachments/assets/13d9e893-6456-4800-9753-94b4d6a82027" />
+<img width="972" height="398" alt="image" src="https://github.com/user-attachments/assets/60285f6a-9f89-4c78-b8f9-18adc9c0685d" />
+<img width="653" height="441" alt="image" src="https://github.com/user-attachments/assets/04c449bf-3ba4-4228-b5dd-c077e5712272" />
+
 
 ---
 
