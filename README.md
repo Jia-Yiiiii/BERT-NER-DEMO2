@@ -227,4 +227,5 @@ BERT-NER-DEMO2/
 ├── utils.py
 ├── requirements.txt
 ├── .gitignore
+|——label2id.json
 └── README.md
