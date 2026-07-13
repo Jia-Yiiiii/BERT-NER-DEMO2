@@ -72,9 +72,9 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 |------|--------|----------|-------------|-----------|
 | bert-base-chinese | MSRA | ignore | 0.9263| 0.9192 |
 | chinese-bert-wwm | MSRA | ignore | 0.9403 | 0.9095 |
-| bert-base-chinese | Weibo | ignore | 0.7268 | 0.6594 |
-| chinese-bert-wwm | Weibo | ignore | 0.7270 | 0.6745 |
-| chinese-bert-wwm | Weibo | other | 0.7270 | 0.6745 |
+| bert-base-chinese | Weibo | ignore | 0.7117 | 0.6682 |
+| chinese-bert-wwm | Weibo | ignore | 0.7075 | 0.6460 |
+| chinese-bert-wwm | Weibo | other | 0.7075 | 0.6460 |
 
 ### 2.1 MSRA + bert-base-chinese
 
@@ -127,34 +127,26 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 测试集详细结果：
 
-| 标签 | precision | recall | f1-score | support |
-|------|-----------|--------|----------|---------|
-| B-GPE.NAM | 0.79 | 0.88 | 0.84 | 26 |
-| B-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
-| B-LOC.NAM | 0.62 | 0.83 | 0.71 | 6 |
-| B-LOC.NOM | 0.75 | 0.50 | 0.60 | 6 |
-| B-ORG.NAM | 0.81 | 0.45 | 0.58 | 47 |
-| B-ORG.NOM | 0.57 | 0.80 | 0.67 | 5 |
-| B-PER.NAM | 0.95 | 0.83 | 0.89 | 89 |
-| B-PER.NOM | 0.97 | 0.84 | 0.90 | 208 |
-| I-GPE.NAM | 0.74 | 0.84 | 0.79 | 31 |
-| I-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
-| I-LOC.NAM | 0.70 | 0.88 | 0.78 | 16 |
-| I-LOC.NOM | 0.75 | 0.43 | 0.55 | 7 |
-| I-ORG.NAM | 0.89 | 0.47 | 0.61 | 126 |
-| I-ORG.NOM | 0.67 | 0.80 | 0.73 | 5 |
-| I-PER.NAM | 0.99 | 0.80 | 0.89 | 155 |
-| I-PER.NOM | 0.92 | 0.90 | 0.91 | 239 |
-| O | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.78** | **968** |
-| **macro avg** | **0.77** | **0.72** | **0.73** | **968** |
-| **weighted avg** | **0.92** | **0.78** | **0.83** | **968** |
+| 实体类型 | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| GPE.NAM  | 68.75%    | 84.62% | 75.86%   | 26      |
+| GPE.NOM  | 100.00%   | 100.00%| 100.00%  | 1       |
+| LOC.NAM  | 50.00%    | 83.33% | 62.50%   | 6       |
+| LOC.NOM  | 40.00%    | 33.33% | 36.36%   | 6       |
+| ORG.NAM  | 37.50%    | 44.68% | 40.78%   | 47      |
+| ORG.NOM  | 44.44%    | 80.00% | 57.14%   | 5       |
+| PER.NAM  | 73.86%    | 73.03% | 73.45%   | 89      |
+| PER.NOM  | 77.25%    | 78.37% | 77.80%   | 208     |
+| **micro avg** | **68.69%** | **72.94%** | **70.75%** | **388** |
+| **macro avg** | **61.48%** | **72.17%** | **65.49%** | **388** |
+| **weighted avg** | **69.73%** | **72.94%** | **71.10%** | **388** |
 
 **训练曲线**
 
-<img width="475" height="381" alt="image" src="https://github.com/user-attachments/assets/7bca32f2-f647-406f-b5ed-d4ec0839ea0c" />
-<img width="942" height="383" alt="image" src="https://github.com/user-attachments/assets/47424f8b-807b-4541-8d08-cdd5c8ba041f" />
-<img width="491" height="373" alt="image" src="https://github.com/user-attachments/assets/b9dd3ff8-5f00-4a9a-829d-db09132428ca" />
+<img width="473" height="388" alt="image" src="https://github.com/user-attachments/assets/01121a52-c594-4578-9fff-548ddab8941e" />
+<img width="976" height="383" alt="image" src="https://github.com/user-attachments/assets/66f6f57b-f36a-4dd8-ac5f-1b9347bd6854" />
+<img width="530" height="412" alt="image" src="https://github.com/user-attachments/assets/bb08ffa9-9cfd-47ca-9d4e-37aa4ce71812" />
+
 
 
 ---
@@ -163,68 +155,47 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 测试集详细结果：
 
-| 标签 | precision | recall | f1-score | support |
-|------|-----------|--------|----------|---------|
-| B-GPE.NAM | 0.88 | 0.88 | 0.88 | 26 |
-| B-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
-| B-LOC.NAM | 0.45 | 0.83 | 0.59 | 6 |
-| B-LOC.NOM | 1.00 | 0.83 | 0.91 | 6 |
-| B-ORG.NAM | 0.71 | 0.47 | 0.56 | 47 |
-| B-ORG.NOM | 0.80 | 0.80 | 0.80 | 5 |
-| B-PER.NAM | 0.95 | 0.82 | 0.88 | 89 |
-| B-PER.NOM | 0.95 | 0.82 | 0.88 | 208 |
-| I-GPE.NAM | 0.91 | 0.94 | 0.92 | 31 |
-| I-GPE.NOM | 0.00 | 0.00 | 0.00 | 1 |
-| I-LOC.NAM | 0.54 | 0.88 | 0.67 | 16 |
-| I-LOC.NOM | 1.00 | 1.00 | 1.00 | 7 |
-| I-ORG.NAM | 0.91 | 0.48 | 0.62 | 126 |
-| I-ORG.NOM | 1.00 | 0.80 | 0.89 | 5 |
-| I-PER.NAM | 0.96 | 0.79 | 0.87 | 155 |
-| I-PER.NOM | 0.93 | 0.87 | 0.90 | 239 |
-| O | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.77** | **968** |
-| **macro avg** | **0.76** | **0.72** | **0.73** | **968** |
-| **weighted avg** | **0.92** | **0.77** | **0.83** | **968** |
+| 实体类型 | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| GPE.NAM  | 67.65%    | 88.46% | 76.67%   | 26      |
+| GPE.NOM  | 100.00%   | 100.00%| 100.00%  | 1       |
+| LOC.NAM  | 55.56%    | 83.33% | 66.67%   | 6       |
+| LOC.NOM  | 35.71%    | 83.33% | 50.00%   | 6       |
+| ORG.NAM  | 43.14%    | 46.81% | 44.90%   | 47      |
+| ORG.NOM  | 44.44%    | 80.00% | 57.14%   | 5       |
+| PER.NAM  | 71.88%    | 77.53% | 74.59%   | 89      |
+| PER.NOM  | 73.13%    | 79.81% | 76.32%   | 208     |
+| **micro avg** | **66.89%** | **76.03%** | **71.17%** | **388** |
+| **macro avg** | **61.44%** | **79.91%** | **68.29%** | **388** |
+| **weighted avg** | **67.69%** | **76.03%** | **71.40%** | **388** |
 
 **训练曲线**
-
-<img width="495" height="396" alt="image" src="https://github.com/user-attachments/assets/60df5fc1-a1e4-43a1-bf9e-7332aba2f018" />
-<img width="982" height="400" alt="image" src="https://github.com/user-attachments/assets/0af548b3-7218-442a-9fb9-6291acb60734" />
-<img width="476" height="387" alt="image" src="https://github.com/user-attachments/assets/17797a7b-e6fc-455a-8bd9-3cbd2334a6a8" />
-
+<img width="480" height="381" alt="image" src="https://github.com/user-attachments/assets/420b2081-73d8-401c-8270-11a60ebbe768" />
+<img width="978" height="402" alt="image" src="https://github.com/user-attachments/assets/51c0c03a-4f05-472d-ac79-7f8773b03fd7" />
+<img width="540" height="402" alt="image" src="https://github.com/user-attachments/assets/71e756cb-7c67-4206-8209-9d2d1a0902f3" />
 
 ### 2.5 Weibo + chinese-bert-wwm (align_type='other')
 
 测试集详细结果：
-
-| 标签 | precision | recall | f1-score | support |
-|------|-----------|--------|----------|---------|
-| B-GPE.NAM | 0.79 | 0.88 | 0.84 | 26 |
-| B-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
-| B-LOC.NAM | 0.62 | 0.83 | 0.71 | 6 |
-| B-LOC.NOM | 0.75 | 0.50 | 0.60 | 6 |
-| B-ORG.NAM | 0.81 | 0.45 | 0.58 | 47 |
-| B-ORG.NOM | 0.57 | 0.80 | 0.67 | 5 |
-| B-PER.NAM | 0.95 | 0.83 | 0.89 | 89 |
-| B-PER.NOM | 0.97 | 0.84 | 0.90 | 208 |
-| I-GPE.NAM | 0.74 | 0.84 | 0.79 | 31 |
-| I-GPE.NOM | 1.00 | 1.00 | 1.00 | 1 |
-| I-LOC.NAM | 0.70 | 0.88 | 0.78 | 16 |
-| I-LOC.NOM | 0.75 | 0.43 | 0.55 | 7 |
-| I-ORG.NAM | 0.89 | 0.47 | 0.61 | 126 |
-| I-ORG.NOM | 0.67 | 0.80 | 0.73 | 5 |
-| I-PER.NAM | 0.99 | 0.80 | 0.89 | 155 |
-| I-PER.NOM | 0.92 | 0.90 | 0.91 | 239 |
-| O | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.78** | **968** |
-| **macro avg** | **0.77** | **0.72** | **0.73** | **968** |
-| **weighted avg** | **0.92** | **0.78** | **0.83** | **968** |
+| 实体类型 | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| GPE.NAM  | 68.75%    | 84.62% | 75.86%   | 26      |
+| GPE.NOM  | 100.00%   | 100.00%| 100.00%  | 1       |
+| LOC.NAM  | 50.00%    | 83.33% | 62.50%   | 6       |
+| LOC.NOM  | 40.00%    | 33.33% | 36.36%   | 6       |
+| ORG.NAM  | 37.50%    | 44.68% | 40.78%   | 47      |
+| ORG.NOM  | 44.44%    | 80.00% | 57.14%   | 5       |
+| PER.NAM  | 73.86%    | 73.03% | 73.45%   | 89      |
+| PER.NOM  | 77.25%    | 78.37% | 77.80%   | 208     |
+| micro avg | 68.69%   | 72.94% | 70.75%   | 388     |
+| macro avg | 61.48%   | 72.17% | 65.49%   | 388     |
+| weighted avg | 69.73% | 72.94% | 71.10% | 388     |
 
 **训练曲线**
+<img width="562" height="402" alt="image" src="https://github.com/user-attachments/assets/3c4d86af-5c8f-46b8-8808-957abcf576f2" />
+<img width="1110" height="402" alt="image" src="https://github.com/user-attachments/assets/93fa3c2e-d77d-4e2d-86da-f6fb915f5892" />
+<img width="555" height="385" alt="image" src="https://github.com/user-attachments/assets/584ff5cd-8a7c-43d2-aaea-5a5ac10713be" />
 
-<img width="462" height="377" alt="image" src="https://github.com/user-attachments/assets/41141296-a92d-4e58-b5f3-c0ef497add41" />
-<img width="955" height="380" alt="image" src="https://github.com/user-attachments/assets/7acdb971-ee0a-4d90-87af-c6ecf3d1636d" />
-<img width="523" height="397" alt="image" src="https://github.com/user-attachments/assets/f8b23c98-1dee-4934-a5bf-828f36ecfb99" />
 
 
 ---
