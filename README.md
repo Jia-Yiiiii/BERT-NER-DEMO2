@@ -71,7 +71,7 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 | 模型 | 数据集 | 对齐策略 | 最佳验证 F1 | 测试集 F1 |
 |------|--------|----------|-------------|-----------|
 | bert-base-chinese | MSRA | ignore | 0.9263| 0.9192 |
-| chinese-bert-wwm | MSRA | ignore | 0.9338 | 0.9148 |
+| chinese-bert-wwm | MSRA | ignore | 0.9403 | 0.9095 |
 | bert-base-chinese | Weibo | ignore | 0.7268 | 0.6594 |
 | chinese-bert-wwm | Weibo | ignore | 0.7270 | 0.6745 |
 | chinese-bert-wwm | Weibo | other | 0.7270 | 0.6745 |
@@ -102,24 +102,23 @@ MSRA 用 `0` 分隔句子，Weibo 用空行。代码中通过判断 `line == '' 
 
 测试集详细结果：
 
-| 标签 | precision | recall | f1-score | support |
-|------|-----------|--------|----------|---------|
-| B-LOC | 0.98 | 0.98 | 0.98 | 643 |
-| B-ORG | 0.97 | 0.94 | 0.96 | 323 |
-| B-PER | 0.99 | 0.98 | 0.99 | 307 |
-| I-LOC | 0.99 | 0.96 | 0.97 | 967 |
-| I-ORG | 0.99 | 0.94 | 0.97 | 1343 |
-| I-PER | 0.99 | 0.99 | 0.99 | 558 |
-| O | 0.00 | 0.00 | 0.00 | 0 |
-| **accuracy** | | | **0.96** | **4141** |
-| **macro avg** | **0.85** | **0.83** | **0.84** | **4141** |
-| **weighted avg** | **0.99** | **0.96** | **0.97** | **4141** |
+
+
+| 实体类型 | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| LOC（地点） | 95.72% | 93.93% | 94.82% | 643 |
+| ORG（组织） | 87.24% | 91.02% | 89.09% | 323 |
+| PER（人名） | 97.41% | 98.05% | 97.73% | 307 |
+| **micro avg** | **93.89%** | **94.19%** | **94.04%** | **1273** |
+| **macro avg** | **93.46%** | **94.33%** | **93.88%** | **1273** |
+| **weighted avg** | **93.98%** | **94.19%** | **94.07%** | **1273** |
 
 **训练曲线**
 
-<img width="563" height="401" alt="image" src="https://github.com/user-attachments/assets/871c77a2-e8a0-4086-9ff4-1fcb73f7b7c8" />
-<img width="1092" height="401" alt="image" src="https://github.com/user-attachments/assets/1cfb110c-5e74-41f9-8ffa-0fc1bf73c198" />
-<img width="572" height="428" alt="image" src="https://github.com/user-attachments/assets/b7a6e30d-a30f-43d0-bbd5-3b5e0006e906" />
+<img width="468" height="386" alt="image" src="https://github.com/user-attachments/assets/701595da-3848-40a5-9c30-1727fbdf2616" />
+<img width="971" height="407" alt="image" src="https://github.com/user-attachments/assets/9b01558d-ff2b-4d9a-a4f8-711f84cacd34" />
+<img width="560" height="458" alt="image" src="https://github.com/user-attachments/assets/841072a6-d4a4-4657-88fc-532e31f28cbd" />
+
 
 
 ---
